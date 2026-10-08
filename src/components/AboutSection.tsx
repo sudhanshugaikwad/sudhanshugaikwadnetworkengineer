@@ -1,8 +1,8 @@
 import { Download } from 'lucide-react'
-import { useState } from 'react'
-import { BookOpenText, ChevronRight, Gauge, GraduationCap,  UserRound } from 'lucide-react'
+import { BookOpenText, Gauge, GraduationCap, UserRound } from 'lucide-react'
 import profilePhoto from '../assets/Sudhanshu02.jpeg'
 import { profile } from '../data/profile'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs'
 
 const competencyRows = [
   { label: 'Network Operations', value: 90 },
@@ -17,43 +17,25 @@ const aboutTabs = [
   { id: 'proficiency', label: 'Proficiency', icon: Gauge },
 ] as const
 
-type AboutTabId = (typeof aboutTabs)[number]['id']
-
 export function AboutSection() {
-  const [activeTab, setActiveTab] = useState<AboutTabId>('about')
-
-  const handleTabClick = (id: AboutTabId) => {
-    setActiveTab(id)
-
-    if (id === 'proficiency') {
-      const section = document.getElementById('proficiency')
-      if (section) {
-        section.scrollIntoView({ behavior: 'smooth', block: 'start' })
-      }
-    }
-  }
-
   return (
     <section id="about" className="section-shell">
       <div className="about-layout">
-        <div className="about-tab-header">
+        <Tabs defaultValue="about" className="about-tabs">
+        <TabsList className="about-tab-header" aria-label="About section content">
           {aboutTabs.map(({ id, label, icon: Icon }) => (
-            <button
+            <TabsTrigger
               key={id}
-              type="button"
-              className={`about-tab ${activeTab === id ? 'active' : ''}`}
-              onClick={() => handleTabClick(id)}
+              value={id}
+              className="about-tab"
             >
+              <Icon size={18} aria-hidden="true" />
               <span>{label}</span>
-              <ChevronRight size={18} />
-              <Icon size={18} />
-            </button>
+            </TabsTrigger>
           ))}
-        </div>
+        </TabsList>
 
-        <div className="about-content-panel">
-          {activeTab === 'about' && (
-            <>
+        <TabsContent value="about" className="about-content-panel about-tab-panel">
               <div className="about-visual">
                 <div className="profile-avatar">
                     <img src={profilePhoto} alt="Sudhanshu Gaikwad" decoding="async" />
@@ -62,7 +44,7 @@ export function AboutSection() {
 
               <div className="about-profile-copy">
                 <h2>Sudhanshu Gaikwad</h2>
-                <h3>NOC Engineer | Network Engineer | CCNA</h3>
+                <h3>Network Engineer | NOC Engineer | CCNA</h3>
 
                 <p>
                   NOC Engineer with a strong foundation in networking, network monitoring,
@@ -92,10 +74,9 @@ export function AboutSection() {
                   </a>
                 </div>
               </div>
-            </>
-          )}
+        </TabsContent>
 
-          {activeTab === 'education' && (
+        <TabsContent value="education" className="about-content-panel about-tab-panel">
             <div className="about-info-box">
               <div className="education-header-block">
                 <h2 className="education-heading">My Education</h2>
@@ -171,9 +152,9 @@ export function AboutSection() {
                 </article>
               </div>
             </div>
-          )}
+        </TabsContent>
 
-          {activeTab === 'proficiency' && (
+        <TabsContent value="proficiency" className="about-content-panel about-tab-panel">
             <div className="about-info-box proficiency-panel">
               <h2 className="proficiency-heading">Core Competencies</h2>
 
@@ -200,8 +181,8 @@ export function AboutSection() {
                 ))}
               </div>
             </div>
-          )}
-        </div>
+        </TabsContent>
+        </Tabs>
       </div>
     </section>
   )

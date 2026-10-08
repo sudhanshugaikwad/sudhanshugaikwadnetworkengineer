@@ -13,6 +13,7 @@ import {
 } from 'lucide-react'
 import { profile } from '../data/profile'
 import { ThemeToggle } from './ThemeToggle'
+import { NavigationMenu, NavigationMenuItem, NavigationMenuLink, NavigationMenuList } from './ui/navigation-menu'
 
 
 type NavbarProps = {
@@ -24,9 +25,9 @@ type NavbarProps = {
 const mainLinks = [
   { label: 'Home', id: 'home', icon: Home },
   { label: 'About', id: 'about', icon: UserRound },
+   { label: 'Certificates', id: 'certificates', icon: Award },
   { label: 'Skills', id: 'skills', icon: Sparkles },
   { label: 'Work', id: 'work', icon: BriefcaseBusiness },
-  { label: 'Certificates', id: 'certificates', icon: Award },
   { label: 'Tools', id: 'tools', icon: Wrench },
   { label: 'Contact', id: 'contact', icon: Mail },
 ]
@@ -38,7 +39,7 @@ export function Navbar({ activeSection, theme, onToggleTheme }: NavbarProps) {
 
   return (
     <header className="topbar">
-      <nav className="navbar" aria-label="Main navigation">
+      <NavigationMenu className="navbar" aria-label="Main navigation">
         <a href="#home" className="brand" aria-label="Sudhanshu Gaikwad home">
           <span className="brand-mark">{'{ SG }'}</span>
         </a>
@@ -54,26 +55,28 @@ export function Navbar({ activeSection, theme, onToggleTheme }: NavbarProps) {
         </button>
 
         <div className={`nav-panel ${mobileOpen ? 'open' : ''}`}>
-          <div className="nav-links">
+          <NavigationMenuList className="nav-links">
             {mainLinks.map(({ label, id, icon: Icon }) => (
-              <a
-                key={id}
-                href={`#${id}`}
-                className={`${activeSection === id ? 'active' : ''} text-[0.75rem] sm:text-[0.8rem] md:text-[0.82rem]`}
-                onClick={(event) => {
-                  event.preventDefault()
-                  const section = document.getElementById(id)
-                  section?.classList.add('is-visible')
-                  section?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-                  window.history.replaceState(null, '', `#${id}`)
-                  closeMobileMenu()
-                }}
-              >
-                <Icon size={15} />
-                <span>{label}</span>
-              </a>
+              <NavigationMenuItem key={id} className="nav-item">
+                <NavigationMenuLink
+                  href={`#${id}`}
+                  className={`nav-menu-link ${activeSection === id ? 'active' : ''}`}
+                  aria-current={activeSection === id ? 'location' : undefined}
+                  onClick={(event) => {
+                    event.preventDefault()
+                    const section = document.getElementById(id)
+                    section?.classList.add('is-visible')
+                    section?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    window.history.replaceState(null, '', `#${id}`)
+                    closeMobileMenu()
+                  }}
+                >
+                  <Icon size={15} />
+                  <span>{label}</span>
+                </NavigationMenuLink>
+              </NavigationMenuItem>
             ))}
-          </div>
+          </NavigationMenuList>
 
           <div className="nav-actions">
             <a href={profile.resumeUrl} target="_blank" rel="noreferrer" className="primary-button compact-button text-[0.74rem] sm:text-[0.78rem]">
@@ -83,7 +86,7 @@ export function Navbar({ activeSection, theme, onToggleTheme }: NavbarProps) {
             <ThemeToggle theme={theme} onToggle={onToggleTheme} />
           </div>
         </div>
-      </nav>
+      </NavigationMenu>
     </header>
   )
 }
